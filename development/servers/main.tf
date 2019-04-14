@@ -59,10 +59,10 @@ resource "aws_launch_template" "marcus_nginx_lt" {
   image_id               = "${data.aws_ami.marcus-nginx-ami.id}"
   vpc_security_group_ids = ["${var.sg_ids["public"]}"]
   key_name               = "marcus-macos"
-  
+
   network_interfaces {
-        associate_public_ip_address = true
-    }
+    associate_public_ip_address = true
+  }
 
   tags = {
     name = "marcus_nginx_lt"
