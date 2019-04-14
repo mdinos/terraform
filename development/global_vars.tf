@@ -1,5 +1,5 @@
 variable "region" {
-    default = "eu-north-1"
+  default = "eu-north-1"
 }
 
 variable "availability_zones" {
@@ -15,7 +15,7 @@ variable "vpc_name" {
 }
 
 variable "vpc_cidr" {
-    default = "172.31.0.0/16"
+  default = "172.31.0.0/16"
 }
 
 variable "subnet_cidrs" {
@@ -33,7 +33,7 @@ variable "sg_ids" {
   type = "map"
 
   default = {
-    public = "sg-02e42fea073555050",
+    public  = "sg-02e42fea073555050"
     private = "sg-0761dbd2c071d5bad"
   }
 }
@@ -48,11 +48,15 @@ variable "subnet_ids" {
     public_1b  = "subnet-09aac952b11e29c65"
   }
 }
-    
+
 variable "zero_cidr" {
   default = "0.0.0.0/0"
 }
 
 variable "my_ip" {
   default = "81.109.234.222/32"
+}
+
+variable "instance_type" {
+  default = "t3.micro"
 }

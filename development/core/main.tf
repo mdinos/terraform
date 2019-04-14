@@ -101,13 +101,13 @@ resource "aws_security_group" "private_subnets_sg" {
         from_port   = 80
         to_port     = 80
         protocol    = "tcp"
-        cidr_blocks = ["${var.subnet_cidrs.public_1a}", "${var.subnet_cidrs.public_1b}", "${var.subnet_cidrs.private_1b}, "${var.subnet_cidrs.private_1b}]
+        cidr_blocks = ["${var.subnet_cidrs.public_1a}", "${var.subnet_cidrs.public_1b}", "${var.subnet_cidrs.private_1a}", "${var.subnet_cidrs.private_1b}"]
     }
     egress {
         from_port       = 0
         to_port         = 0
         protocol        = "-1"
-        cidr_blocks = ["${var.subnet_cidrs.public_1a}", "${var.subnet_cidrs.public_1b}", "${var.subnet_cidrs.private_1b}, "${var.subnet_cidrs.private_1b}]
+        cidr_blocks = ["${var.subnet_cidrs.public_1a}", "${var.subnet_cidrs.public_1b}", "${var.subnet_cidrs.private_1a}", "${var.subnet_cidrs.private_1b}"]
     }
 }
 
