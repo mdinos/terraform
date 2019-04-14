@@ -1,0 +1,3 @@
+[submodule "development/rs-tracker-lambda/rs-tracker-lambda"]
+	path = development/rs-tracker-lambda/rs-tracker-lambda
+	url = git@github.com:mdinos/rs-tracker-lambda
