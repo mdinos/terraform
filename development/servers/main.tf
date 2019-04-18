@@ -17,6 +17,11 @@ resource "aws_autoscaling_group" "marcus_nginx_asg" {
   }
 }
 
+
+data "aws_s3_bucket" "marcus_nginx_access_s3" {
+  bucket = "marcus-nginx-access-s3"
+}
+
 resource "aws_lb" "marcus_nginx_lb" {
   name               = "marcus-nginx-lb"
   load_balancer_type = "application"
@@ -24,7 +29,7 @@ resource "aws_lb" "marcus_nginx_lb" {
   subnets            = ["${var.subnet_ids["public_1a"]}", "${var.subnet_ids["public_1b"]}"]
 
   access_logs {
-    bucket  = "${aws_s3_bucket.marcus-nginx-access-s3.id}"
+    bucket  = "${data.aws_s3_bucket.marcus_nginx_access_s3.id}"
     enabled = true
   }
 }
@@ -57,51 +62,21 @@ resource "aws_launch_template" "marcus_nginx_lt" {
   name                   = "marcus_nginx_lt"
   instance_type          = "${var.instance_type}"
   image_id               = "${data.aws_ami.marcus-nginx-ami.id}"
-  vpc_security_group_ids = ["${var.sg_ids["public"]}"]
-  key_name               = "marcus-macos"
+  key_name               = "marcus"
+  iam_instance_profile {
+    arn = "arn:aws:iam::474307705618:instance-profile/EC2ReadFromS3"
+  }
 
   network_interfaces {
     associate_public_ip_address = true
+    security_groups = ["${var.sg_ids["public"]}"]
   }
 
   tags = {
-    name = "marcus_nginx_lt"
-  }
+      key                 = "Name"
+      value               = "marcus-nginx"
+      propagate_at_launch = true
+    }
 }
 
 data "aws_elb_service_account" "main" {}
-
-resource "aws_s3_bucket" "marcus-nginx-access-s3" {
-  bucket = "marcus-nginx-access-s3"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-
-  tags = {
-    Name        = "ngnix_access"
-    Environment = "development"
-  }
-
-  policy = <<POLICY
-{
-  "Id": "Policy",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::marcus-nginx-access-s3/*",
-      "Principal": {
-        "AWS": [
-          "${data.aws_elb_service_account.main.arn}"
-        ]
-      }
-    }
-  ]
-}
-POLICY
-}
