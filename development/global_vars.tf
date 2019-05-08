@@ -57,6 +57,10 @@ variable "my_ip" {
   default = "81.109.234.222/32"
 }
 
+variable "10sc_ip" {
+  default = "163.171.28.130/32"
+}
+
 variable "instance_type" {
   default = "t3.micro"
 }
