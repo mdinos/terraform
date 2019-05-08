@@ -1,14 +1,9 @@
-resource "aws_ecs_cluster" "rs-api" {
-  name = "rs-api"
-}
-
 resource "aws_ecs_service" "rs_api" {
   name            = "rs-api"
   cluster         = "${aws_ecs_cluster.rs-api.id}"
-  launch_type     = "FARGATE"
+  launch_type     = "EC2"
   task_definition = "${aws_ecs_task_definition.rs_api.arn}"
   desired_count   = 1
-  iam_role        = "${var.ecs_role}"
 
   load_balancer {
     target_group_arn = "${aws_lb_target_group.rs_api_tg.arn}"
@@ -22,6 +17,13 @@ resource "aws_ecs_task_definition" "rs_api" {
   container_definitions = "${file("rs-api-cd.json")}"
 }
 
+resource "aws_lb" "rs_api_lb" {
+  name               = "rs-api-lb"
+  load_balancer_type = "application"
+  security_groups    = ["${var.sg_ids["private"]}"]
+  subnets            = ["${var.subnet_ids["private_1a"]}", "${var.subnet_ids["private_1b"]}"]
+}
+
 resource "aws_lb_target_group" "rs_api_tg" {
   name     = "rs-api-tg"
   port     = 80
@@ -29,8 +31,20 @@ resource "aws_lb_target_group" "rs_api_tg" {
   vpc_id   = "${var.vpc_id}"
 }
 
+resource "aws_lb_listener" "forward_to_rs_api" {
+  load_balancer_arn = "${aws_lb.rs_api_lb.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.rs_api_tg.arn}"
+  }
+}
+
 resource "aws_iam_role" "rs_api_role" {
   name = "rs_api_role"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
