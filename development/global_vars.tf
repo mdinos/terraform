@@ -33,8 +33,8 @@ variable "sg_ids" {
   type = "map"
 
   default = {
-    public  = "sg-02e42fea073555050"
-    private = "sg-0761dbd2c071d5bad"
+    public  = "sg-03fafefc26f4c16b9"
+    private = "sg-02c2dfc1d5c4f05cd"
   }
 }
 
@@ -42,10 +42,10 @@ variable "subnet_ids" {
   type = "map"
 
   default = {
-    private_1a = "subnet-030ab1dd740571c37"
-    private_1b = "subnet-00d3286c2c308f150"
-    public_1a  = "subnet-051381725bdbaf070"
-    public_1b  = "subnet-09aac952b11e29c65"
+    private_1a = "subnet-0f288397444f38ecb"
+    private_1b = "subnet-0b9b2b04eda1eec52"
+    public_1a  = "subnet-008972996f15ee6b9"
+    public_1b  = "subnet-0896c8095eea9e8f0"
   }
 }
 
@@ -59,4 +59,12 @@ variable "my_ip" {
 
 variable "instance_type" {
   default = "t3.micro"
+}
+
+variable "default_nacl_id" {
+  default = "acl-1e926277"
+}
+
+variable "default_igw_id" {
+  default = "igw-7358ac1a"
 }
