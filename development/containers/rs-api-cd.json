@@ -1,0 +1,15 @@
+[
+    {
+      "name": "rs-api",
+      "image": "rs-api:latest",
+      "cpu": 0,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ]
+    }
+]
