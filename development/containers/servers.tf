@@ -38,6 +38,7 @@ resource "aws_autoscaling_group" "rs_ecs_cluster_asg" {
     value               = "rs_api_ecs_cluster"
     propagate_at_launch = true
   }
+
   tag {
     key                 = "Zone"
     value               = "Private"

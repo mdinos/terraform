@@ -17,7 +17,6 @@ resource "aws_autoscaling_group" "marcus_nginx_asg" {
   }
 }
 
-
 data "aws_s3_bucket" "marcus_nginx_access_s3" {
   bucket = "marcus-nginx-access-s3"
 }
@@ -59,24 +58,25 @@ resource "aws_lb_target_group" "marcus_nginx_tg" {
 }
 
 resource "aws_launch_template" "marcus_nginx_lt" {
-  name                   = "marcus_nginx_lt"
-  instance_type          = "${var.instance_type}"
-  image_id               = "${data.aws_ami.marcus-nginx-ami.id}"
-  key_name               = "marcus"
+  name          = "marcus_nginx_lt"
+  instance_type = "${var.instance_type}"
+  image_id      = "${data.aws_ami.marcus-nginx-ami.id}"
+  key_name      = "marcus"
+
   iam_instance_profile {
     arn = "arn:aws:iam::474307705618:instance-profile/EC2ReadFromS3"
   }
 
   network_interfaces {
     associate_public_ip_address = true
-    security_groups = ["${var.sg_ids["public"]}"]
+    security_groups             = ["${var.sg_ids["public"]}"]
   }
 
   tags = {
-      key                 = "Name"
-      value               = "marcus-nginx"
-      propagate_at_launch = true
-    }
+    key                 = "Name"
+    value               = "marcus-nginx"
+    propagate_at_launch = true
+  }
 }
 
 data "aws_elb_service_account" "main" {}
