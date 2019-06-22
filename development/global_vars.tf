@@ -44,7 +44,7 @@ variable "subnet_ids" {
   default = {
     private_1a = "subnet-0f288397444f38ecb"
     private_1b = "subnet-0b9b2b04eda1eec52"
-    public_1a  = "subnet-008972996f15ee6b9"
+    public_1a  = "subnet-07b40d497845d5580"
     public_1b  = "subnet-0896c8095eea9e8f0"
   }
 }
@@ -71,4 +71,14 @@ variable "default_nacl_id" {
 
 variable "default_igw_id" {
   default = "igw-7358ac1a"
+}
+
+variable "route_tables" {
+  type = "map"
+
+  default = {
+    "public" = "rtb-0106c89539b7e1113"
+    "private_1a" = "rtb-0f04c65eeefa5df33"
+    "private_1b" = "rtb-06c5e16a37c54b147"
+  }
 }

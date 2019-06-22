@@ -1,10 +1,11 @@
 resource "aws_autoscaling_group" "marcus_nginx_asg" {
-  name               = "marcus_nginx_asg"
-  min_size           = "0"
+  name               = "[PUBLIC] NGINX_ASG"
+  min_size           = "1"
   max_size           = "2"
-  desired_capacity   = "1"
+  desired_capacity   = "2"
   target_group_arns  = ["${aws_lb_target_group.marcus_nginx_tg.arn}"]
   availability_zones = "${var.availability_zones}"
+  default_cooldown   = 150
 
   vpc_zone_identifier = [
     "${var.subnet_ids["public_1a"]}",
@@ -70,6 +71,7 @@ resource "aws_launch_template" "marcus_nginx_lt" {
   network_interfaces {
     associate_public_ip_address = true
     security_groups             = ["${var.sg_ids["public"]}"]
+    delete_on_termination = true
   }
 
   tags = {
@@ -77,6 +79,12 @@ resource "aws_launch_template" "marcus_nginx_lt" {
     value               = "marcus-nginx"
     propagate_at_launch = true
   }
-}
 
-data "aws_elb_service_account" "main" {}
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      "Name" = "[PUBLIC] Nginx"
+    }
+  }
+}

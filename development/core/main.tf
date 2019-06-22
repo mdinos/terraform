@@ -47,11 +47,6 @@ resource "aws_subnet" "public_1b" {
   }
 }
 
-resource "aws_main_route_table_association" "a" {
-  vpc_id         = "${data.aws_vpc.marcus_vpc.id}"
-  route_table_id = "${aws_route_table.marcus_route_t.id}"
-}
-
 resource "aws_default_network_acl" "marcus_acl" {
   default_network_acl_id = "${var.default_nacl_id}"
   subnet_ids             = ["${var.subnet_ids["public_1a"]}", "${var.subnet_ids["public_1b"]}", "${var.subnet_ids["private_1a"]}", "${var.subnet_ids["private_1b"]}"]
@@ -92,6 +87,24 @@ resource "aws_default_network_acl" "marcus_acl" {
     to_port    = 22
   }
 
+  egress {
+    protocol   = "-1"
+    rule_no    = 310
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 320
+    action     = "allow"
+    cidr_block = "${var.10sc_ip}"
+    from_port  = 22
+    to_port    = 22
+  }
+
   tags = {
     Name = "marcus_acl"
   }
@@ -113,14 +126,21 @@ resource "aws_security_group" "private_subnets_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${var.subnet_cidrs["public_1a"]}", "${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
+    cidr_blocks = ["${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}", "${var.subnet_cidrs["public_1a"]}"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["${var.subnet_cidrs["public_1a"]}", "${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
+    cidr_blocks = ["${var.zero_cidr}"]
+  }
+
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_ip}", "${var.10sc_ip}"]
   }
 }
 
@@ -140,7 +160,7 @@ resource "aws_security_group" "public_subnets_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${var.zero_cidr}", "${var.subnet_cidrs["public_1a"]}", "${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
+    cidr_blocks = ["${var.zero_cidr}", "${var.subnet_cidrs["public_1a"]}","${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
   }
 
   egress {
@@ -149,39 +169,34 @@ resource "aws_security_group" "public_subnets_sg" {
     protocol    = "-1"
     cidr_blocks = ["${var.zero_cidr}"]
   }
-}
 
-resource "aws_route_table" "marcus_route_t" {
-  vpc_id = "${data.aws_vpc.marcus_vpc.id}"
-
-  route {
-    cidr_block = "${var.zero_cidr}"
-    gateway_id = "${var.default_igw_id}"
-  }
-
-  tags = {
-    Name = "marcus_route_t"
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my_ip}", "${var.10sc_ip}"]
   }
 }
 
-resource "aws_eip" "nat_gw_eip_1a" {}
+/*resource "aws_eip" "nat_gw_eip_1a" {}
 
 resource "aws_eip" "nat_gw_eip_1b" {}
 
-resource "aws_nat_gateway" "private_nat_gw_1a" {
+resource "aws_nat_gateway" "public_nat_gw_1a" {
   allocation_id = "${aws_eip.nat_gw_eip_1a.id}"
-  subnet_id     = "${var.subnet_ids["private_1a"]}"
+  subnet_id     = "${var.subnet_ids["public_1a"]}"
 
   tags = {
-    Name = "private_subnet_nat_gw_1a"
+    Name = "public_subnet_nat_gw_1a"
   }
 }
 
-resource "aws_nat_gateway" "private_nat_gw_1b" {
+resource "aws_nat_gateway" "public_nat_gw_1b" {
   allocation_id = "${aws_eip.nat_gw_eip_1b.id}"
-  subnet_id     = "${var.subnet_ids["private_1b"]}"
+  subnet_id     = "${var.subnet_ids["public_1b"]}"
 
   tags = {
-    Name = "private_subnet_nat_gw_1b"
+    Name = "public_subnet_nat_gw_1b"
   }
 }
+*/

@@ -5,6 +5,10 @@ resource "aws_instance" "bastion" {
   key_name               = "marcus"
   vpc_security_group_ids = ["${var.sg_ids["public"]}"]
   subnet_id              = "${var.subnet_ids["public_1a"]}"
+
+  tags = {
+    "Name" = "[PUBLIC] Bastion"
+  }
 }
 
 resource "aws_eip" "bastion_eip" {
