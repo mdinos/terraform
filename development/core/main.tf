@@ -78,6 +78,24 @@ resource "aws_default_network_acl" "marcus_acl" {
     to_port    = 80
   }
 
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 230
+    action     = "allow"
+    cidr_block = "${var.zero_cidr}"
+    from_port  = 443
+    to_port    = 443
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 240
+    action     = "allow"
+    cidr_block = "${var.zero_cidr}"
+    from_port  = 32768
+    to_port    = 65535
+  }
+
   egress {
     protocol   = "tcp"
     rule_no    = 300
@@ -160,7 +178,14 @@ resource "aws_security_group" "public_subnets_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["${var.zero_cidr}", "${var.subnet_cidrs["public_1a"]}","${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
+    cidr_blocks = ["${var.zero_cidr}", "${var.subnet_cidrs["public_1a"]}", "${var.subnet_cidrs["public_1b"]}", "${var.subnet_cidrs["private_1a"]}", "${var.subnet_cidrs["private_1b"]}"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["${var.zero_cidr}"]
   }
 
   egress {

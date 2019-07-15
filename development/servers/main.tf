@@ -2,7 +2,7 @@ resource "aws_autoscaling_group" "marcus_nginx_asg" {
   name               = "[PUBLIC] NGINX_ASG"
   min_size           = "1"
   max_size           = "2"
-  desired_capacity   = "2"
+  desired_capacity   = "1"
   target_group_arns  = ["${aws_lb_target_group.marcus_nginx_tg.arn}"]
   availability_zones = "${var.availability_zones}"
   default_cooldown   = 150
@@ -71,7 +71,7 @@ resource "aws_launch_template" "marcus_nginx_lt" {
   network_interfaces {
     associate_public_ip_address = true
     security_groups             = ["${var.sg_ids["public"]}"]
-    delete_on_termination = true
+    delete_on_termination       = true
   }
 
   tags = {

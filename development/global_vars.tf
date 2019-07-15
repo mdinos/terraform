@@ -77,7 +77,7 @@ variable "route_tables" {
   type = "map"
 
   default = {
-    "public" = "rtb-0106c89539b7e1113"
+    "public"     = "rtb-0106c89539b7e1113"
     "private_1a" = "rtb-0f04c65eeefa5df33"
     "private_1b" = "rtb-06c5e16a37c54b147"
   }
