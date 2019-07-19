@@ -62,7 +62,7 @@ variable "10sc_ip" {
 }
 
 variable "instance_type" {
-  default = "t3.micro"
+  default = "t3.nano"
 }
 
 variable "default_nacl_id" {

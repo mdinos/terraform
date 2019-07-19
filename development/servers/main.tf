@@ -36,8 +36,10 @@ resource "aws_lb" "marcus_nginx_lb" {
 
 resource "aws_lb_listener" "forward_to_nginx" {
   load_balancer_arn = "${aws_lb.marcus_nginx_lb.arn}"
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = "${var.certificate_arn}"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
   default_action {
     type             = "forward"
