@@ -10,6 +10,7 @@ resource "aws_lambda_function" "rs_tracker_lamda" {
   environment {
     variables = {
       username = "woofythedog"
+      bucket   = "rs-tracker-lambda"
     }
   }
 }
