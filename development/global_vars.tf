@@ -2,6 +2,10 @@ variable "region" {
   default = "eu-north-1"
 }
 
+variable "account_number" {
+  default = "474307705618"
+}
+
 variable "availability_zones" {
   default = ["eu-north-1a", "eu-north-1b"]
 }
