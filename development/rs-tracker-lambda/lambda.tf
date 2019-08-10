@@ -14,4 +14,3 @@ resource "aws_lambda_function" "rs_tracker_lambda" {
     }
   }
 }
-

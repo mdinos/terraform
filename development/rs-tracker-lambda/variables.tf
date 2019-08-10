@@ -1,3 +1,3 @@
 variable "lambda_name" {
-    default = "rs-tracker-lambda"
+  default = "rs-tracker-lambda"
 }
