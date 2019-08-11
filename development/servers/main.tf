@@ -65,6 +65,7 @@ resource "aws_launch_template" "marcus_nginx_lt" {
   instance_type = "${var.instance_type}"
   image_id      = "${data.aws_ami.marcus-nginx-ami.id}"
   key_name      = "marcus"
+  user_data     = "${data.template_cloudinit_config.cloud_init.rendered}"
 
   iam_instance_profile {
     arn = "arn:aws:iam::474307705618:instance-profile/EC2ReadFromS3"
