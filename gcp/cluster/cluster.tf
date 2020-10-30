@@ -13,6 +13,11 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   cluster    = google_container_cluster.primary_cluster.name
   node_count = 1
 
+  autoscaling {
+      min_node_count = 1
+      max_node_count = 2
+  }
+
   node_config {
     preemptible  = true
     machine_type = "e2-micro"
