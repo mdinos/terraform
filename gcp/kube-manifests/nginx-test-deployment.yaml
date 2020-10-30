@@ -1,0 +1,29 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "nginx-test-deployment"
+  namespace: "default"
+  labels:
+    app: "nginx-test"
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: "nginx-test"
+  template:
+    metadata:
+      labels:
+        app: "nginx-test"
+    spec:
+      containers:
+      - name: "nginx-test"
+        image: "gcr.io/gke-test-project-293913/nginx-test@sha256:49db30568343a2acd71e52653368f05e6041abf1f1dcbdef9abf278f70d94758"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

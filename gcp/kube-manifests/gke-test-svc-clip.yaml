@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gke-test-svc-clip
+spec:
+  selector:
+    app: gke-test
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
